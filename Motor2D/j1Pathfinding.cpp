@@ -140,6 +140,26 @@ uint PathNode::FindWalkableAdjacents(PathList& list_to_fill) const
 	if(App->pathfinding->IsWalkable(cell))
 		list_to_fill.list.add(PathNode(-1, -1, cell, this));
 
+	// north_west
+	cell.create(pos.x - 1, pos.y - 1);
+	if (App->pathfinding->IsWalkable(cell))
+		list_to_fill.list.add(PathNode(-1, -1, cell, this));
+
+	// north_east
+	cell.create(pos.x + 1, pos.y - 1);
+	if (App->pathfinding->IsWalkable(cell))
+		list_to_fill.list.add(PathNode(-1, -1, cell, this));
+
+	// south_west
+	cell.create(pos.x - 1, pos.y + 1);
+	if (App->pathfinding->IsWalkable(cell))
+		list_to_fill.list.add(PathNode(-1, -1, cell, this));
+
+	// south_east
+	cell.create(pos.x + 1, pos.y + 1);
+	if (App->pathfinding->IsWalkable(cell))
+		list_to_fill.list.add(PathNode(-1, -1, cell, this));
+
 	return list_to_fill.list.count();
 }
 
@@ -157,7 +177,7 @@ int PathNode::Score() const
 int PathNode::CalculateF(const iPoint& destination)
 {
 	g = parent->g + 1;
-	h = pos.DistanceTo(destination);
+	h = pos.DistanceNoSqrt(destination);
 
 	return g + h;
 }
@@ -185,8 +205,9 @@ int j1PathFinding::CreatePath(const iPoint& origin, const iPoint& destination)
 	open.list.add(node_origin);
 	while (open.list.count() != 0)
 	{
+		p2List_item<PathNode>* current_node = open.GetNodeLowestScore();
 		// TODO 3: Move the lowest score cell from open list to the closed list
-		close.list.add(open.GetNodeLowestScore()->data);
+		close.list.add(current_node->data);
 
 		// TODO 4: If we just added the destination, we are done!
 		// Backtrack to create the final path
@@ -210,31 +231,28 @@ int j1PathFinding::CreatePath(const iPoint& origin, const iPoint& destination)
 			close.list.end->data.FindWalkableAdjacents(childs);
 
 
-			// TODO 6: Iterate adjancent nodes:
-			// ignore nodes in the closed list
-			// If it is NOT found, calculate its F and add it to the open list
-			// If it is already in the open list, check if it is a better path (compare G)
-			// If it is a better path, Update the parent
+			// TODO 6: Iterate adjancent nodes:					
 			p2List_item<PathNode>* child_node = childs.list.start;
 			while (child_node != NULL)
 			{
-				if (!close.Find(child_node->data.pos))
+				if (!close.Find(child_node->data.pos))	// ignore nodes in the closed list
 				{
-					child_node->data.CalculateF(destination);
-					if (open.Find(child_node->data.pos) && open.Find(child_node->data.pos)->data.g > child_node->data.g )
+					child_node->data.CalculateF(destination); // If it is NOT found, calculate its F and add it to the open list
+					if (open.Find(child_node->data.pos)) // If it is already in the open list, check if it is a better path (compare G)
 					{
-						open.list.At(open.Find(child_node->data.pos)->data)->data.parent = child_node->data.parent;
+						if (open.Find(child_node->data.pos)->data.g > child_node->data.g)
+						{
+							PathNode old_node = open.Find(child_node->data.pos)->data; // If it is a better path, Update the parent
+							old_node.parent = child_node->data.parent;
+						}
 					}
-					else
-					{
-						open.list.add(child_node->data);
-					}
+					else open.list.add(child_node->data);
 				}
 				child_node = child_node->next;
 			}
 		}
 
-		open.list.del(open.GetNodeLowestScore());
+		open.list.del(current_node);
 	}
 	
 
