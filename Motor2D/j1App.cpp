@@ -47,12 +47,12 @@ j1App::j1App(int argc, char* args[]) : argc(argc), args(args)
 j1App::~j1App()
 {
 	// release modules
-	p2List_item<j1Module*>* item = modules.end;
+	std::list<j1Module*>::reverse_iterator item = modules.rbegin();
 
-	while(item != NULL)
+	while(item != modules.rend())
 	{
-		RELEASE(item->data);
-		item = item->prev;
+		RELEASE(*item);
+		++item;
 	}
 
 	modules.clear();
@@ -61,7 +61,7 @@ j1App::~j1App()
 void j1App::AddModule(j1Module* module)
 {
 	module->Init();
-	modules.add(module);
+	modules.push_back(module);
 }
 
 // Called before render is available
@@ -80,19 +80,18 @@ bool j1App::Awake()
 		// self-config
 		ret = true;
 		app_config = config.child("app");
-		title.create(app_config.child("title").child_value());
-		organization.create(app_config.child("organization").child_value());
+		title = app_config.child("title").child_value();
+		organization = app_config.child("organization").child_value();
 	}
 
 	if(ret == true)
 	{
-		p2List_item<j1Module*>* item;
-		item = modules.start;
+		std::list<j1Module*>::iterator item = modules.begin();
 
-		while(item != NULL && ret == true)
+		while(item != modules.end() && ret == true)
 		{
-			ret = item->data->Awake(config.child(item->data->name.GetString()));
-			item = item->next;
+			ret = (*item)->Awake(config.child((*item)->name.c_str()));
+			++item;
 		}
 	}
 
@@ -103,13 +102,12 @@ bool j1App::Awake()
 bool j1App::Start()
 {
 	bool ret = true;
-	p2List_item<j1Module*>* item;
-	item = modules.start;
+	std::list<j1Module*>::iterator item = modules.begin();
 
-	while(item != NULL && ret == true)
+	while(item != modules.end() && ret == true)
 	{
-		ret = item->data->Start();
-		item = item->next;
+		ret = (*item)->Start();
+		++item;
 	}
 
 	return ret;
@@ -171,19 +169,18 @@ void j1App::FinishUpdate()
 bool j1App::PreUpdate()
 {
 	bool ret = true;
-	p2List_item<j1Module*>* item;
-	item = modules.start;
+	
 	j1Module* pModule = NULL;
 
-	for(item = modules.start; item != NULL && ret == true; item = item->next)
+	for(std::list<j1Module*>::iterator item = modules.begin(); item != modules.end() && ret == true; ++item)
 	{
-		pModule = item->data;
+		pModule = *item;
 
 		if(pModule->active == false) {
 			continue;
 		}
 
-		ret = item->data->PreUpdate();
+		ret = (*item)->PreUpdate();
 	}
 
 	return ret;
@@ -193,19 +190,18 @@ bool j1App::PreUpdate()
 bool j1App::DoUpdate()
 {
 	bool ret = true;
-	p2List_item<j1Module*>* item;
-	item = modules.start;
+
 	j1Module* pModule = NULL;
 
-	for(item = modules.start; item != NULL && ret == true; item = item->next)
+	for(std::list<j1Module*>::iterator item = modules.begin(); item != modules.end() && ret == true; ++item)
 	{
-		pModule = item->data;
+		pModule = *item;
 
 		if(pModule->active == false) {
 			continue;
 		}
 
-		ret = item->data->Update(dt);
+		ret = (*item)->Update(dt);
 	}
 
 	return ret;
@@ -215,18 +211,18 @@ bool j1App::DoUpdate()
 bool j1App::PostUpdate()
 {
 	bool ret = true;
-	p2List_item<j1Module*>* item;
+	
 	j1Module* pModule = NULL;
 
-	for(item = modules.start; item != NULL && ret == true; item = item->next)
+	for(std::list<j1Module*>::iterator item = modules.begin(); item != modules.end() && ret == true; ++item)
 	{
-		pModule = item->data;
+		pModule = *item;
 
 		if(pModule->active == false) {
 			continue;
 		}
 
-		ret = item->data->PostUpdate();
+		ret = (*item)->PostUpdate();
 	}
 
 	return ret;
@@ -236,13 +232,12 @@ bool j1App::PostUpdate()
 bool j1App::CleanUp()
 {
 	bool ret = true;
-	p2List_item<j1Module*>* item;
-	item = modules.end;
+	std::list<j1Module*>::reverse_iterator item = modules.rbegin();
 
-	while(item != NULL && ret == true)
+	while(item != modules.rend() && ret == true)
 	{
-		ret = item->data->CleanUp();
-		item = item->prev;
+		ret = (*item)->CleanUp();
+		++item;
 	}
 
 	return ret;
@@ -266,13 +261,13 @@ const char* j1App::GetArgv(int index) const
 // ---------------------------------------
 const char* j1App::GetTitle() const
 {
-	return title.GetString();
+	return title.c_str();
 }
 
 // ---------------------------------------
 const char* j1App::GetOrganization() const
 {
-	return organization.GetString();
+	return organization.c_str();
 }
 
 // Load / Save
@@ -295,7 +290,7 @@ void j1App::SaveGame(const char* file) const
 }
 
 // ---------------------------------------
-void j1App::GetSaveGames(p2List<p2SString>& list_to_fill) const
+void j1App::GetSaveGames(std::list<std::string>& list_to_fill) const
 {
 	// need to add functionality to file_system module for this to work
 }
@@ -307,31 +302,31 @@ bool j1App::LoadGameNow()
 	pugi::xml_document data;
 	pugi::xml_node root;
 
-	pugi::xml_parse_result result = data.load_file(load_game.GetString());
+	pugi::xml_parse_result result = data.load_file(load_game.c_str());
 
 	if(result != NULL)
 	{
-		LOG("Loading new Game State from %s...", load_game.GetString());
+		LOG("Loading new Game State from %s...", load_game.c_str());
 
 		root = data.child("game_state");
 
-		p2List_item<j1Module*>* item = modules.start;
+		std::list<j1Module*>::iterator item = modules.begin();
 		ret = true;
 
-		while(item != NULL && ret == true)
+		while(item != modules.end() && ret == true)
 		{
-			ret = item->data->Load(root.child(item->data->name.GetString()));
-			item = item->next;
+			ret = (*item)->Load(root.child((*item)->name.c_str()));
+			++item;
 		}
 
 		data.reset();
 		if(ret == true)
 			LOG("...finished loading");
 		else
-			LOG("...loading process interrupted with error on module %s", (item != NULL) ? item->data->name.GetString() : "unknown");
+			LOG("...loading process interrupted with error on module %s", (*item != NULL) ? (*item)->name.c_str(): "unknown");
 	}
 	else
-		LOG("Could not parse game state xml file %s. pugi error: %s", load_game.GetString(), result.description());
+		LOG("Could not parse game state xml file %s. pugi error: %s", load_game.c_str(), result.description());
 
 
 	want_to_load = false;
@@ -342,7 +337,7 @@ bool j1App::SavegameNow() const
 {
 	bool ret = true;
 
-	LOG("Saving Game State to %s...", save_game.GetString());
+	LOG("Saving Game State to %s...", save_game.c_str());
 
 	// xml object were we will store all data
 	pugi::xml_document data;
@@ -350,22 +345,22 @@ bool j1App::SavegameNow() const
 	
 	root = data.append_child("game_state");
 
-	p2List_item<j1Module*>* item = modules.start;
+	std::list<j1Module*>::const_iterator item = modules.begin();
 
-	while(item != NULL && ret == true)
+	while(item != modules.end() && ret == true)
 	{
-		ret = item->data->Save(root.append_child(item->data->name.GetString()));
-		item = item->next;
+		ret = (*item)->Save(root.append_child((*item)->name.c_str()));
+		++item;
 	}
 
 	if(ret == true)
 	{
-		data.save_file(save_game.GetString());
+		data.save_file(save_game.c_str());
 	
-		LOG("... finished saving", save_game.GetString());
+		LOG("... finished saving", save_game.c_str());
 	}
 	else
-		LOG("Save process halted from an error in module %s", (item != NULL) ? item->data->name.GetString() : "unknown");
+		LOG("Save process halted from an error in module %s", (*item != NULL) ? (*item)->name.c_str() : "unknown");
 
 	data.reset();
 	want_to_save = false;

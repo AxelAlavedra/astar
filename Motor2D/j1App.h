@@ -1,7 +1,9 @@
 #ifndef __j1APP_H__
 #define __j1APP_H__
 
-#include "p2List.h"
+#include <list>
+#include <vector>
+
 #include "j1Module.h"
 #include "PugiXml\src\pugixml.hpp"
 
@@ -48,7 +50,7 @@ public:
 
 	void LoadGame(const char* file);
 	void SaveGame(const char* file) const;
-	void GetSaveGames(p2List<p2SString>& list_to_fill) const;
+	void GetSaveGames(std::list<std::string>& list_to_fill) const;
 
 private:
 
@@ -88,21 +90,21 @@ public:
 
 private:
 
-	p2List<j1Module*>	modules;
+	std::list<j1Module*>	modules;
 	uint				frames;
 	float				dt;
 	int					argc;
 	char**				args;
 
-	p2SString			title;
-	p2SString			organization;
+	std::string			title;
+	std::string			organization;
 
 	mutable bool		want_to_save;
 	bool				want_to_load;
-	p2SString			load_game;
-	mutable p2SString	save_game;
+	std::string			load_game;
+	mutable std::string	save_game;
 };
 
-extern j1App* App; // No student is asking me about that ... odd :-S
+extern j1App* App;
 
 #endif

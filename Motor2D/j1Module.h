@@ -1,12 +1,14 @@
 // ----------------------------------------------------
-// j1Module.h
+// Module.h
 // Interface for all engine modules
 // ----------------------------------------------------
 
-#ifndef __j1MODULE_H__
-#define __j1MODULE_H__
+#ifndef _MODULE_H_
+#define _MODULE_H_
 
-#include "p2SString.h"
+#include <list>
+#include <vector>
+
 #include "PugiXml\src\pugixml.hpp"
 
 class j1App;
@@ -74,7 +76,7 @@ public:
 
 public:
 
-	p2SString	name;
+	std::string	name;
 	bool		active;
 
 };
