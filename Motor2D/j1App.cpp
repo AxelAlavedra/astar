@@ -82,6 +82,7 @@ bool j1App::Awake()
 		app_config = config.child("app");
 		title = app_config.child("title").child_value();
 		organization = app_config.child("organization").child_value();
+		frame_rate = app_config.attribute("framerate_cap").as_uint();
 	}
 
 	if(ret == true)
@@ -153,6 +154,19 @@ pugi::xml_node j1App::LoadConfig(pugi::xml_document& config_file) const
 // ---------------------------------------------
 void j1App::PrepareUpdate()
 {
+	last_sec_frame_count++;
+
+	if (!paused)
+	{
+		dt = frame_time.ReadSec();
+		if (dt > (float)frame_rate / 1000)
+			dt = (float)frame_rate / 1000;
+	}
+	else
+	{
+		dt = 0;
+	}
+	frame_time.Start();
 }
 
 // ---------------------------------------------
@@ -163,6 +177,32 @@ void j1App::FinishUpdate()
 
 	if(want_to_load == true)
 		LoadGameNow();
+
+	if (last_sec_frame_time.Read() > 1000)
+	{
+		last_sec_frame_time.Start();
+		prev_last_sec_frame_count = last_sec_frame_count;
+		last_sec_frame_count = 0;
+	}
+
+	double last_frame_ms = frame_time.Read();
+	uint32 frames_on_last_update = prev_last_sec_frame_count;
+
+	static char title[256];
+	sprintf_s(title, 256, " FPS: %i Last Frame Ms: %.2f",
+		frames_on_last_update, last_frame_ms);
+	App->win->SetTitle(title);
+
+
+	if (frame_cap)
+	{
+		float waiting_time = (1000 / frame_rate);
+		if (last_frame_ms < waiting_time)
+		{
+			waiting_time -= last_frame_ms;
+			SDL_Delay(waiting_time);
+		}		
+	}
 }
 
 // Call modules before each loop iteration

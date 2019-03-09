@@ -4,6 +4,8 @@
 #include <list>
 #include <vector>
 
+#include "Timer.h"
+#include "PerfTimer.h"
 #include "Module.h"
 #include "PugiXml\src\pugixml.hpp"
 
@@ -95,6 +97,14 @@ private:
 	float				dt;
 	int					argc;
 	char**				args;
+
+	Timer				frame_time;
+	double				frame_rate;
+	bool				paused = false;
+	bool				frame_cap = true;
+	Timer				last_sec_frame_time;
+	uint32				last_sec_frame_count = 0;
+	uint32				prev_last_sec_frame_count = 0;
 
 	std::string			title;
 	std::string			organization;

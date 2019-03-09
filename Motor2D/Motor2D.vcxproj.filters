@@ -40,6 +40,12 @@
     <ClCompile Include="TestingScene.cpp">
       <Filter>Desenvolupament  ========\Scenes</Filter>
     </ClCompile>
+    <ClCompile Include="PerfTimer.cpp">
+      <Filter>Programacio 2 ===========</Filter>
+    </ClCompile>
+    <ClCompile Include="Timer.cpp">
+      <Filter>Programacio 2 ===========</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="p2Defs.h">
@@ -92,6 +98,12 @@
     </ClInclude>
     <ClInclude Include="TestingScene.h">
       <Filter>Desenvolupament  ========\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="PerfTimer.h">
+      <Filter>Programacio 2 ===========</Filter>
+    </ClInclude>
+    <ClInclude Include="Timer.h">
+      <Filter>Programacio 2 ===========</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
