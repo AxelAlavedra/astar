@@ -1,7 +1,7 @@
-#ifndef __j1PATHFINDING_H__
-#define __j1PATHFINDING_H__
+#ifndef __Pathfinding_H__
+#define __Pathfinding_H__
 
-#include "j1Module.h"
+#include "Module.h"
 #include "p2Point.h"
 
 #define DEFAULT_PATH_LENGTH 50
@@ -13,14 +13,14 @@
 // Details: http://theory.stanford.edu/~amitp/GameProgramming/
 // --------------------------------------------------
 
-class j1PathFinding : public j1Module
+class Pathfinding : public Module
 {
 public:
 
-	j1PathFinding();
+	Pathfinding();
 
 	// Destructor
-	~j1PathFinding();
+	~Pathfinding();
 
 	// Called before quitting
 	bool CleanUp();
@@ -99,4 +99,4 @@ struct PathList
 
 
 
-#endif // __j1PATHFINDING_H__
+#endif // __Pathfinding_H__

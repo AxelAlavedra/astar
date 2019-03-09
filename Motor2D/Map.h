@@ -3,7 +3,7 @@
 
 #include "PugiXml/src/pugixml.hpp"
 #include "p2Point.h"
-#include "j1Module.h"
+#include "Module.h"
 
 struct Properties
 {
@@ -96,14 +96,14 @@ struct MapData
 };
 
 // ----------------------------------------------------
-class j1Map : public j1Module
+class Map : public Module
 {
 public:
 
-	j1Map();
+	Map();
 
 	// Destructor
-	virtual ~j1Map();
+	virtual ~Map();
 
 	// Called before render is available
 	bool Awake(pugi::xml_node& conf);
@@ -142,4 +142,4 @@ private:
 	bool				map_loaded;
 };
 
-#endif // __j1MAP_H__
+#endif // __Map_H__

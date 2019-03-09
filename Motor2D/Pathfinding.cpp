@@ -1,21 +1,21 @@
 #include "p2Defs.h"
 #include "p2Log.h"
 #include "j1App.h"
-#include "j1PathFinding.h"
+#include "Pathfinding.h"
 
-j1PathFinding::j1PathFinding() : j1Module(), map(NULL), last_path(DEFAULT_PATH_LENGTH),width(0), height(0)
+Pathfinding::Pathfinding() : Module(), map(NULL), last_path(DEFAULT_PATH_LENGTH),width(0), height(0)
 {
 	name = "pathfinding";
 }
 
 // Destructor
-j1PathFinding::~j1PathFinding()
+Pathfinding::~Pathfinding()
 {
 	RELEASE_ARRAY(map);
 }
 
 // Called before quitting
-bool j1PathFinding::CleanUp()
+bool Pathfinding::CleanUp()
 {
 	LOG("Freeing pathfinding library");
 
@@ -25,7 +25,7 @@ bool j1PathFinding::CleanUp()
 }
 
 // Sets up the walkability map
-void j1PathFinding::SetMap(uint width, uint height, uchar* data)
+void Pathfinding::SetMap(uint width, uint height, uchar* data)
 {
 	this->width = width;
 	this->height = height;
@@ -36,21 +36,21 @@ void j1PathFinding::SetMap(uint width, uint height, uchar* data)
 }
 
 // Utility: return true if pos is inside the map boundaries
-bool j1PathFinding::CheckBoundaries(const iPoint& pos) const
+bool Pathfinding::CheckBoundaries(const iPoint& pos) const
 {
 	return (pos.x >= 0 && pos.x <= (int)width &&
 			pos.y >= 0 && pos.y <= (int)height);
 }
 
 // Utility: returns true is the tile is walkable
-bool j1PathFinding::IsWalkable(const iPoint& pos) const
+bool Pathfinding::IsWalkable(const iPoint& pos) const
 {
 	uchar t = GetTileAt(pos);
 	return t != INVALID_WALK_CODE && t > 0;
 }
 
 // Utility: return the walkability value of a tile
-uchar j1PathFinding::GetTileAt(const iPoint& pos) const
+uchar Pathfinding::GetTileAt(const iPoint& pos) const
 {
 	if(CheckBoundaries(pos))
 		return map[(pos.y*width) + pos.x];
@@ -59,7 +59,7 @@ uchar j1PathFinding::GetTileAt(const iPoint& pos) const
 }
 
 // To request all tiles involved in the last generated path
-const std::vector<iPoint>* j1PathFinding::GetLastPath() const
+const std::vector<iPoint>* Pathfinding::GetLastPath() const
 {
 	return &last_path;
 }
@@ -185,7 +185,7 @@ int PathNode::CalculateF(const iPoint& destination)
 // ----------------------------------------------------------------------------------
 // Actual A* algorithm: return number of steps in the creation of the path or -1 ----
 // ----------------------------------------------------------------------------------
-int j1PathFinding::CreatePath(const iPoint& origin, const iPoint& destination)
+int Pathfinding::CreatePath(const iPoint& origin, const iPoint& destination)
 {
 	last_path.clear();
 	// TODO 1: if origin or destination are not walkable, return -1

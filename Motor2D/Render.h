@@ -1,18 +1,18 @@
-#ifndef __j1RENDER_H__
-#define __j1RENDER_H__
+#ifndef __Render_H__
+#define __Render_H__
 
 #include "SDL/include/SDL.h"
 #include "p2Point.h"
-#include "j1Module.h"
+#include "Module.h"
 
-class j1Render : public j1Module
+class Render : public Module
 {
 public:
 
-	j1Render();
+	Render();
 
 	// Destructor
-	virtual ~j1Render();
+	virtual ~Render();
 
 	// Called before render is available
 	bool Awake(pugi::xml_node&);
@@ -54,4 +54,4 @@ public:
 	SDL_Color		background;
 };
 
-#endif // __j1RENDER_H__
+#endif // __Render_H__

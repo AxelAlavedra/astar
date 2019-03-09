@@ -1,21 +1,21 @@
-#ifndef __j1APP_H__
-#define __j1APP_H__
+#ifndef _j1App_H_
+#define _j1App_H_
 
 #include <list>
 #include <vector>
 
-#include "j1Module.h"
+#include "Module.h"
 #include "PugiXml\src\pugixml.hpp"
 
 // Modules
-class j1Window;
-class j1Input;
-class j1Render;
-class j1Textures;
-class j1Audio;
-class j1Scene;
-class j1Map;
-class j1PathFinding;
+class Window;
+class Input;
+class Render;
+class Textures;
+class Audio;
+class SceneManager;
+class Map;
+class Pathfinding;
 
 class j1App
 {
@@ -40,7 +40,7 @@ public:
 	bool CleanUp();
 
 	// Add a new module to handle
-	void AddModule(j1Module* module);
+	void AddModule(Module* module);
 
 	// Exposing some properties for reading
 	int GetArgc() const;
@@ -79,18 +79,18 @@ private:
 public:
 
 	// Modules
-	j1Window*			win;
-	j1Input*			input;
-	j1Render*			render;
-	j1Textures*			tex;
-	j1Audio*			audio;
-	j1Scene*			scene;
-	j1Map*				map;
-	j1PathFinding*		pathfinding;
+	Window*			win;
+	Input*			input;
+	Render*			render;
+	Textures*		tex;
+	Audio*			audio;
+	SceneManager*	scene_manager;
+	Map*			map;
+	Pathfinding*	pathfinding;
 
 private:
 
-	std::list<j1Module*>	modules;
+	std::list<Module*>	modules;
 	uint				frames;
 	float				dt;
 	int					argc;

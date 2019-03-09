@@ -1,24 +1,24 @@
 #include "p2Defs.h"
 #include "p2Log.h"
 #include "j1App.h"
-#include "j1Audio.h"
+#include "Audio.h"
 
 #include "SDL/include/SDL.h"
 #include "SDL_mixer\include\SDL_mixer.h"
 #pragma comment( lib, "SDL_mixer/libx86/SDL2_mixer.lib" )
 
-j1Audio::j1Audio() : j1Module()
+Audio::Audio() : Module()
 {
 	music = NULL;
 	name = "audio";
 }
 
 // Destructor
-j1Audio::~j1Audio()
+Audio::~Audio()
 {}
 
 // Called before render is available
-bool j1Audio::Awake(pugi::xml_node& config)
+bool Audio::Awake(pugi::xml_node& config)
 {
 	LOG("Loading Audio Mixer");
 	bool ret = true;
@@ -54,7 +54,7 @@ bool j1Audio::Awake(pugi::xml_node& config)
 }
 
 // Called before quitting
-bool j1Audio::CleanUp()
+bool Audio::CleanUp()
 {
 	if(!active)
 		return true;
@@ -80,7 +80,7 @@ bool j1Audio::CleanUp()
 }
 
 // Play a music file
-bool j1Audio::PlayMusic(const char* path, float fade_time)
+bool Audio::PlayMusic(const char* path, float fade_time)
 {
 	bool ret = true;
 
@@ -134,7 +134,7 @@ bool j1Audio::PlayMusic(const char* path, float fade_time)
 }
 
 // Load WAV
-unsigned int j1Audio::LoadFx(const char* path)
+unsigned int Audio::LoadFx(const char* path)
 {
 	unsigned int ret = 0;
 
@@ -157,7 +157,7 @@ unsigned int j1Audio::LoadFx(const char* path)
 }
 
 // Play WAV
-bool j1Audio::PlayFx(unsigned int id, int repeat)
+bool Audio::PlayFx(unsigned int id, int repeat)
 {
 	bool ret = false;
 

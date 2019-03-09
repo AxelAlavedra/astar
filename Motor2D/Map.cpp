@@ -1,22 +1,22 @@
 #include "p2Defs.h"
 #include "p2Log.h"
 #include "j1App.h"
-#include "j1Render.h"
-#include "j1Textures.h"
-#include "j1Map.h"
+#include "Render.h"
+#include "Textures.h"
+#include "Map.h"
 #include <math.h>
 
-j1Map::j1Map() : j1Module(), map_loaded(false)
+Map::Map() : Module(), map_loaded(false)
 {
 	name = "map";
 }
 
 // Destructor
-j1Map::~j1Map()
+Map::~Map()
 {}
 
 // Called before render is available
-bool j1Map::Awake(pugi::xml_node& config)
+bool Map::Awake(pugi::xml_node& config)
 {
 	LOG("Loading Map Parser");
 	bool ret = true;
@@ -26,7 +26,7 @@ bool j1Map::Awake(pugi::xml_node& config)
 	return ret;
 }
 
-void j1Map::Draw()
+void Map::Draw()
 {
 	if(map_loaded == false)
 		return;
@@ -35,8 +35,8 @@ void j1Map::Draw()
 	{
 		MapLayer* layer = *item;
 
-		/*if(layer->properties.Get("Nodraw") != 0)
-			continue;*/
+		if(layer->properties.Get("Nodraw") != 0)
+			continue;
 
 		for(int y = 0; y < data.height; ++y)
 		{
@@ -71,7 +71,7 @@ int Properties::Get(const char* value, int default_value) const
 	return default_value;
 }
 
-TileSet* j1Map::GetTilesetFromTileId(int id) const
+TileSet* Map::GetTilesetFromTileId(int id) const
 {
 	std::list<TileSet*>::const_iterator item = data.tilesets.begin();
 	TileSet* set = *item;
@@ -90,7 +90,7 @@ TileSet* j1Map::GetTilesetFromTileId(int id) const
 	return set;
 }
 
-iPoint j1Map::MapToWorld(int x, int y) const
+iPoint Map::MapToWorld(int x, int y) const
 {
 	iPoint ret;
 
@@ -113,7 +113,7 @@ iPoint j1Map::MapToWorld(int x, int y) const
 	return ret;
 }
 
-iPoint j1Map::WorldToMap(int x, int y) const
+iPoint Map::WorldToMap(int x, int y) const
 {
 	iPoint ret(0,0);
 
@@ -151,7 +151,7 @@ SDL_Rect TileSet::GetTileRect(int id) const
 }
 
 // Called before quitting
-bool j1Map::CleanUp()
+bool Map::CleanUp()
 {
 	LOG("Unloading map");
 
@@ -184,7 +184,7 @@ bool j1Map::CleanUp()
 }
 
 // Load new map
-bool j1Map::Load(const char* file_name)
+bool Map::Load(const char* file_name)
 {
 	bool ret = true;
 	std::string tmp_string = folder + file_name;
@@ -268,7 +268,7 @@ bool j1Map::Load(const char* file_name)
 }
 
 // Load map general properties
-bool j1Map::LoadMap()
+bool Map::LoadMap()
 {
 	bool ret = true;
 	pugi::xml_node map = map_file.child("map");
@@ -333,7 +333,7 @@ bool j1Map::LoadMap()
 	return ret;
 }
 
-bool j1Map::LoadTilesetDetails(pugi::xml_node& tileset_node, TileSet* set)
+bool Map::LoadTilesetDetails(pugi::xml_node& tileset_node, TileSet* set)
 {
 	bool ret = true;
 	set->name = tileset_node.attribute("name").as_string();
@@ -358,7 +358,7 @@ bool j1Map::LoadTilesetDetails(pugi::xml_node& tileset_node, TileSet* set)
 	return ret;
 }
 
-bool j1Map::LoadTilesetImage(pugi::xml_node& tileset_node, TileSet* set)
+bool Map::LoadTilesetImage(pugi::xml_node& tileset_node, TileSet* set)
 {
 	bool ret = true;
 	pugi::xml_node image = tileset_node.child("image");
@@ -394,7 +394,7 @@ bool j1Map::LoadTilesetImage(pugi::xml_node& tileset_node, TileSet* set)
 	return ret;
 }
 
-bool j1Map::LoadLayer(pugi::xml_node& node, MapLayer* layer)
+bool Map::LoadLayer(pugi::xml_node& node, MapLayer* layer)
 {
 	bool ret = true;
 
@@ -426,7 +426,7 @@ bool j1Map::LoadLayer(pugi::xml_node& node, MapLayer* layer)
 }
 
 // Load a group of properties from a node and fill a list with it
-bool j1Map::LoadProperties(pugi::xml_node& node, Properties& properties)
+bool Map::LoadProperties(pugi::xml_node& node, Properties& properties)
 {
 	bool ret = false;
 
@@ -450,7 +450,7 @@ bool j1Map::LoadProperties(pugi::xml_node& node, Properties& properties)
 	return ret;
 }
 
-bool j1Map::CreateWalkabilityMap(int& width, int& height, uchar** buffer) const
+bool Map::CreateWalkabilityMap(int& width, int& height, uchar** buffer) const
 {
 	bool ret = false;
 

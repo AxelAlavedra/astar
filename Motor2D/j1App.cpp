@@ -4,14 +4,14 @@
 #include "p2Defs.h"
 #include "p2Log.h"
 
-#include "j1Window.h"
-#include "j1Input.h"
-#include "j1Render.h"
-#include "j1Textures.h"
-#include "j1Audio.h"
-#include "j1Scene.h"
-#include "j1Map.h"
-#include "j1Pathfinding.h"
+#include "Window.h"
+#include "Input.h"
+#include "Render.h"
+#include "Textures.h"
+#include "Audio.h"
+#include "SceneManager.h"
+#include "Map.h"
+#include "Pathfinding.h"
 #include "j1App.h"
 
 // Constructor
@@ -20,14 +20,14 @@ j1App::j1App(int argc, char* args[]) : argc(argc), args(args)
 	frames = 0;
 	want_to_save = want_to_load = false;
 
-	input = new j1Input();
-	win = new j1Window();
-	render = new j1Render();
-	tex = new j1Textures();
-	audio = new j1Audio();
-	scene = new j1Scene();
-	map = new j1Map();
-	pathfinding = new j1PathFinding();
+	input = new Input();
+	win = new Window();
+	render = new Render();
+	tex = new Textures();
+	audio = new Audio();
+	scene_manager = new SceneManager();
+	map = new Map();
+	pathfinding = new Pathfinding();
 
 	// Ordered for awake / Start / Update
 	// Reverse order of CleanUp
@@ -37,7 +37,7 @@ j1App::j1App(int argc, char* args[]) : argc(argc), args(args)
 	AddModule(audio);
 	AddModule(map);
 	AddModule(pathfinding);
-	AddModule(scene);
+	AddModule(scene_manager);
 
 	// render last to swap buffer
 	AddModule(render);
@@ -47,7 +47,7 @@ j1App::j1App(int argc, char* args[]) : argc(argc), args(args)
 j1App::~j1App()
 {
 	// release modules
-	std::list<j1Module*>::reverse_iterator item = modules.rbegin();
+	std::list<Module*>::reverse_iterator item = modules.rbegin();
 
 	while(item != modules.rend())
 	{
@@ -58,7 +58,7 @@ j1App::~j1App()
 	modules.clear();
 }
 
-void j1App::AddModule(j1Module* module)
+void j1App::AddModule(Module* module)
 {
 	module->Init();
 	modules.push_back(module);
@@ -86,7 +86,7 @@ bool j1App::Awake()
 
 	if(ret == true)
 	{
-		std::list<j1Module*>::iterator item = modules.begin();
+		std::list<Module*>::iterator item = modules.begin();
 
 		while(item != modules.end() && ret == true)
 		{
@@ -102,7 +102,7 @@ bool j1App::Awake()
 bool j1App::Start()
 {
 	bool ret = true;
-	std::list<j1Module*>::iterator item = modules.begin();
+	std::list<Module*>::iterator item = modules.begin();
 
 	while(item != modules.end() && ret == true)
 	{
@@ -170,9 +170,9 @@ bool j1App::PreUpdate()
 {
 	bool ret = true;
 	
-	j1Module* pModule = NULL;
+	Module* pModule = NULL;
 
-	for(std::list<j1Module*>::iterator item = modules.begin(); item != modules.end() && ret == true; ++item)
+	for(std::list<Module*>::iterator item = modules.begin(); item != modules.end() && ret == true; ++item)
 	{
 		pModule = *item;
 
@@ -191,9 +191,9 @@ bool j1App::DoUpdate()
 {
 	bool ret = true;
 
-	j1Module* pModule = NULL;
+	Module* pModule = NULL;
 
-	for(std::list<j1Module*>::iterator item = modules.begin(); item != modules.end() && ret == true; ++item)
+	for(std::list<Module*>::iterator item = modules.begin(); item != modules.end() && ret == true; ++item)
 	{
 		pModule = *item;
 
@@ -212,9 +212,9 @@ bool j1App::PostUpdate()
 {
 	bool ret = true;
 	
-	j1Module* pModule = NULL;
+	Module* pModule = NULL;
 
-	for(std::list<j1Module*>::iterator item = modules.begin(); item != modules.end() && ret == true; ++item)
+	for(std::list<Module*>::iterator item = modules.begin(); item != modules.end() && ret == true; ++item)
 	{
 		pModule = *item;
 
@@ -232,7 +232,7 @@ bool j1App::PostUpdate()
 bool j1App::CleanUp()
 {
 	bool ret = true;
-	std::list<j1Module*>::reverse_iterator item = modules.rbegin();
+	std::list<Module*>::reverse_iterator item = modules.rbegin();
 
 	while(item != modules.rend() && ret == true)
 	{
@@ -310,7 +310,7 @@ bool j1App::LoadGameNow()
 
 		root = data.child("game_state");
 
-		std::list<j1Module*>::iterator item = modules.begin();
+		std::list<Module*>::iterator item = modules.begin();
 		ret = true;
 
 		while(item != modules.end() && ret == true)
@@ -345,7 +345,7 @@ bool j1App::SavegameNow() const
 	
 	root = data.append_child("game_state");
 
-	std::list<j1Module*>::const_iterator item = modules.begin();
+	std::list<Module*>::const_iterator item = modules.begin();
 
 	while(item != modules.end() && ret == true)
 	{

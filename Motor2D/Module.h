@@ -13,14 +13,14 @@
 
 class j1App;
 
-class j1Module
+class Module
 {
 public:
 
-	j1Module() : active(false)
+	Module() : active(false)
 	{}
 
-	virtual ~j1Module()
+	virtual ~Module()
 	{}
 
 	void Init()
@@ -81,4 +81,4 @@ public:
 
 };
 
-#endif // __j1MODULE_H__
+#endif // __Module_H__
