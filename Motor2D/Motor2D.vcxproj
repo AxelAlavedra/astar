@@ -76,6 +76,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CardManager.cpp" />
+    <ClCompile Include="Deck.cpp" />
+    <ClCompile Include="DynamicEntity.cpp" />
+    <ClCompile Include="Entity.cpp" />
+    <ClCompile Include="EntityManager.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="j1App.cpp" />
     <ClCompile Include="Audio.cpp" />
@@ -86,6 +91,8 @@
     <ClCompile Include="PerfTimer.cpp" />
     <ClCompile Include="Render.cpp" />
     <ClCompile Include="SceneManager.cpp" />
+    <ClCompile Include="StaticEntity.cpp" />
+    <ClCompile Include="Summoner.cpp" />
     <ClCompile Include="TestingScene.cpp" />
     <ClCompile Include="Textures.cpp" />
     <ClCompile Include="Timer.cpp" />
@@ -93,6 +100,12 @@
     <ClCompile Include="PugiXml\src\pugixml.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CardManager.h" />
+    <ClInclude Include="Deck.h" />
+    <ClInclude Include="DynamicEntity.h" />
+    <ClInclude Include="Entity.h" />
+    <ClInclude Include="EntityManager.h" />
+    <ClInclude Include="Animation.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="Pathfinding.h" />
     <ClInclude Include="PerfTimer.h" />
@@ -106,6 +119,8 @@
     <ClInclude Include="p2Point.h" />
     <ClInclude Include="Render.h" />
     <ClInclude Include="SceneManager.h" />
+    <ClInclude Include="StaticEntity.h" />
+    <ClInclude Include="Summoner.h" />
     <ClInclude Include="TestingScene.h" />
     <ClInclude Include="Textures.h" />
     <ClInclude Include="Timer.h" />

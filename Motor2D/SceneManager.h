@@ -4,7 +4,7 @@
 #include "Module.h"
 #include "Scene.h"
 
-enum SCENE_TYPE{
+enum SceneType{
 	MENU,
 	MAP,
 	COMBAT,
