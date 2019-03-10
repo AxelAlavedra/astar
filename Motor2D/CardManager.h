@@ -3,6 +3,7 @@
 
 #include "p2Defs.h"
 #include "Module.h"
+#include "Animation.h"
 
 enum AttackType {
 	BASIC,
@@ -46,8 +47,10 @@ struct Card {
 	CardType type;
 	CardInfo info;
 
+	std::string name;
 	uint level;
 	bool to_delete = false;
+	std::vector<Animation> animations;
 };
 
 class CardManager : public Module
@@ -56,13 +59,18 @@ public:
 	CardManager();
 	~CardManager();
 
+	bool Awake(pugi::xml_node&);
+	bool Start();
 	bool CleanUp();
+	bool Load(pugi::xml_node&) { return true; }
+	bool Save(pugi::xml_node&) const { return true; }
 
 	Card* CreateCard(CardType type);
 
 private:
-	std::vector<CardInfo> library;
-	std::list<Card*> created_cards;
+	pugi::xml_document config_file;
+	pugi::xml_node card_configs;
+	std::list<Card*> cards;
 };
 
 #endif // _CARD_MANAGER_H_

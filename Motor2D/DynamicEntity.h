@@ -42,7 +42,7 @@ public:
 protected:
 	DynamicState state;
 	EntiyDirection direction;
-	Animation* animations;
+	std::vector<Animation> animations;
 	SDL_Rect current_frame;
 	Card* entity_card;
 };
