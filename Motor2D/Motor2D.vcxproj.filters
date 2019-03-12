@@ -67,6 +67,7 @@
     <ClCompile Include="CardManager.cpp">
       <Filter>Engine\Modules</Filter>
     </ClCompile>
+    <ClCompile Include="TransitionManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="p2Defs.h">
@@ -150,6 +151,7 @@
     <ClInclude Include="CardManager.h">
       <Filter>Engine\Modules</Filter>
     </ClInclude>
+    <ClInclude Include="TransitionManager.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Engine">

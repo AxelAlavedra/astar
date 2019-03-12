@@ -27,7 +27,7 @@ public:
 	bool CleanUp();
 	bool Load(pugi::xml_node&);
 	bool Save(pugi::xml_node&) const;
-	bool CreateEntity(EntityType type, fPoint position);
+	bool CreateEntity(EntityType type, fPoint position, Card* card = nullptr);
 	bool DeleteEntity(Entity* entity);
 
 private:

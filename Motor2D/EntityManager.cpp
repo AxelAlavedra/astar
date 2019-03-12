@@ -2,7 +2,8 @@
 #include "Render.h"
 #include "Textures.h"
 #include "Input.h"
-#include "Entity.h"
+#include "DynamicEntity.h"
+#include "CardManager.h"
 #include "EntityManager.h"
 
 
@@ -64,6 +65,7 @@ bool EntityManager::CleanUp()
 	for (std::list<Entity*>::iterator entity = entities.begin(); entity != entities.end(); ++entity)
 	{
 		(*entity)->CleanUp();
+		entity = entities.erase(entity);
 	}
 	entities.clear();
 	id_count = 0;
@@ -81,21 +83,31 @@ bool EntityManager::Save(pugi::xml_node &) const
 	return true;
 }
 
-bool EntityManager::CreateEntity(EntityType type, fPoint position)
+bool EntityManager::CreateEntity(EntityType type, fPoint position, Card* card)
 {
 	std::string id = std::to_string(id_count);
 	switch (type)
 	{
 	case EntityType::TROOP:
-		id += "_TROOP";
-		entities.push_back(new Entity()); //here the constructor should be the one for the type
+	{
+		id += "_" + card->name;
+		DynamicEntity* entity = new DynamicEntity();
+		entity->SetCard(card);
+		entities.push_back(entity);
+	}
+		break;
+	case EntityType::BUILDING:
+		//TODO
 		break;
 	}
+
+	id_count++;
 
 	return true;
 }
 
 bool EntityManager::DeleteEntity(Entity * entity)
 {
+	entities.remove(entity);
 	return true;
 }

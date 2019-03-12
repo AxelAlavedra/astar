@@ -39,6 +39,8 @@ public:
 	virtual void Move() {};
 	virtual void Attack() {};
 
+	void SetCard(Card* card);
+
 protected:
 	DynamicState state;
 	EntiyDirection direction;

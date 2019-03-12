@@ -62,15 +62,20 @@ public:
 	bool Awake(pugi::xml_node&);
 	bool Start();
 	bool CleanUp();
+	bool PostUpdate();
 	bool Load(pugi::xml_node&) { return true; }
 	bool Save(pugi::xml_node&) const { return true; }
 
 	Card* CreateCard(CardType type);
+	Card* DeleteCard(Card* card);
 
 private:
+	bool to_delete = false;
 	pugi::xml_document config_file;
 	pugi::xml_node card_configs;
 	std::list<Card*> cards;
+
+	Card* test_card;
 };
 
 #endif // _CARD_MANAGER_H_

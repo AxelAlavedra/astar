@@ -108,5 +108,12 @@ int main(int argc, char* args[])
 	LOG("... Bye! :)\n");
 
 	// Dump memory leaks
+	if (_CrtDumpMemoryLeaks()) {
+		LOG("Memory leaks!\n");
+	}
+	else {
+		LOG("No leaks!\n");
+	}
+
 	return result;
 }

@@ -62,6 +62,7 @@ bool SceneManager::Save(pugi::xml_node &xml) const
 	return true;
 }
 
+//Scene unloads current scene, then creates and loads new scene.
 void SceneManager::ChangeScene(int new_scene)
 {
 	current_scene->CleanUp();

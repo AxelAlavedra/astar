@@ -1,22 +1,16 @@
-#ifndef _SCENE_MANAGER_H_
-#define _SCENE_MANAGER_H_
+#ifndef _TRANSITION_MANAGER_H_
+#define _TRANSITION_MANAGER_H_
+
+//This is the module that Marc will do on his research?
 
 #include "Module.h"
-#include "Scene.h"
 
-enum SceneType{
-	MENU,
-	MAP,
-	COMBAT,
-	TESTING
-};
-
-class SceneManager :
+class TransitionManager :
 	public Module
 {
 public:
-	SceneManager();
-	~SceneManager();
+	TransitionManager();
+	~TransitionManager();
 
 	// Called before render is available
 	virtual bool Awake(pugi::xml_node&);
@@ -30,11 +24,7 @@ public:
 	virtual bool PostUpdate();
 	// Called before quitting
 	virtual bool CleanUp();
-	virtual bool Load(pugi::xml_node&);
-	virtual bool Save(pugi::xml_node&) const;
 
-	void ChangeScene(int new_scene);
-	Scene* current_scene = nullptr;
 };
-	
-#endif // _SCENE_MANAGER_H_
+
+#endif
